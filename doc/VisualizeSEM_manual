@@ -16,6 +16,7 @@ hgharti_AT_princeton_DOT_edu
 
 TODO
 =================
+- replace C functions with Fortran functions
 - support for parallel writing [not so important!]
 - support for 2D and surface data [not so important!]
 
