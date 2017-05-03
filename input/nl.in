@@ -1,0 +1,31 @@
+# input information
+input: path='../NLSPECFEM3D/in_out_files/DATABASES_MPI', dt=0.05, nstep=5, start=200, step=200, width=6, ncomp=1, head='_div_it', ext='bin', topo=0
+
+# output information
+output: path='../NLSPECFEM3D/in_out_files/DATABASES_MPI', ncomp=1, head='div_nl',vname='p_potential', res=0, form=1
+
+# processor information
+procinfo: nproc=16, head='proc', width=6, npmax=1
+
+# processor list for each plot
+#proclist: mode=1, np=1, list=0
+#proclist: mode=1, np=1, list=1
+#proclist: mode=1, np=1, list=2
+#proclist: mode=1, np=1, list=3
+#proclist: mode=1, np=1, list=4
+#proclist: mode=1, np=1, list=5
+#proclist: mode=1, np=1, list=6
+#proclist: mode=1, np=1, list=7
+#proclist: mode=1, np=1, list=8
+#proclist: mode=1, np=1, list=9
+#proclist: mode=1, np=1, list=10
+#proclist: mode=1, np=1, list=11
+#proclist: mode=1, np=1, list=12
+#proclist: mode=1, np=1, list=13
+#proclist: mode=1, np=1, list=14
+#proclist: mode=1, np=1, list=15
+proclist: mode=0
+
+# server ans executabel list needed only for Ensight Gold format for each plot or only one if all processors are the same
+server: name='fasan.norsar.no', exec='/space/homnath/soft/paraview-3.7/bin/paraview'
+
