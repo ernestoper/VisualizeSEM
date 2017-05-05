@@ -1,27 +1,3 @@
-!=====================================================================
-!
-!               S p e c f e m 3 D  V e r s i o n  1 . 4
-!               ---------------------------------------
-!
-!                 Dimitri Komatitsch and Jeroen Tromp
-!    Seismological Laboratory - California Institute of Technology
-!         (c) California Institute of Technology September 2006
-!
-! This program is free software; you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation; either version 2 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License along
-! with this program; if not, write to the Free Software Foundation, Inc.,
-! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-!
-!=====================================================================
 program visualize
 
 ! This programs writes Ensight Gold binary file collecting binary mesh and volume data
@@ -144,7 +120,6 @@ do i_plot=1,nplot
   call cvd_count_totals_ext_mesh(plot_nproc(i_plot), &
   plot_proc_list(i_plot,1:plot_nproc(i_plot)),proc_width, &
   inp_path,plot_nnode(i_plot),plot_nelmt(i_plot),out_res)    
-  !write(*,*)i_plot,plot_nnode(i_plot),plot_nelmt(i_plot)   
 enddo
 write(*,'(a)')'complete!'
    

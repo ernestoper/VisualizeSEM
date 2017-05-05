@@ -19,10 +19,7 @@ subroutine write_vtu
 use visualize_par
 implicit none
 
-!integer,dimension(nproc),intent(in) :: proc_list
-
 integer :: vtk_etype
-!integer,dimension(6),parameter :: file_unit = (/ 111, 222, 333, 444, 555, 666 /)
 integer,parameter :: plot_nvar = 5
 integer :: endian
 integer,dimension(10) :: bytes,off
@@ -40,7 +37,6 @@ real(kind=4),dimension(:,:,:,:),allocatable :: tmp_dat
 real(kind=4),dimension(:),allocatable :: tmp_rvect,tmp_dat_glob
 
 character(len=12) :: byte_order
-!character(len=60) :: tmp_str,
 character(len=256) :: buffer,pvd_file,pvtu_file,vtu_file,mesh_file
 integer,parameter :: pvd_unit=11,pvtu_unit=22,vtu_unit=33
 character(len=80) :: file_head,inp_fname
@@ -82,8 +78,7 @@ format_str3='(a,a,i'//trim(adjustl(tmp_str))//',a,i'//trim(adjustl(tmp_str))
 write(tmp_str,*)ceiling(log10(real(t_nstep)+1))
 format_str3=trim(format_str3)//',a,i'//trim(adjustl(tmp_str))//',a,i'//trim(adjustl(tmp_str))//')'
 out_ext='.vtu'
-!write(*,*)file_head
-!stop
+
 ! Open pvd file
 pvd_file=trim(out_path)//'/'// trim(out_head)//'.pvd'
 open(unit=pvd_unit, file=trim(pvd_file), status='replace', action='write', iostat=ios)
