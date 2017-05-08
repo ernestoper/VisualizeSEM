@@ -2,7 +2,7 @@
 ! REVISION:
 !   April 09,2010, Hom Nath Gharti
 ! FEEDBACK:
-!   homnath_AT_norsar_DOT_no 
+!   hgharti_AT_princeton_DOT_edu 
 subroutine read_input (inp_fname)
 use visualize_par
 use string_process

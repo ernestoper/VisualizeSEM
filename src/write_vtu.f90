@@ -155,20 +155,6 @@ do i_t=1,t_nstep
   
   do i_plot=1,nplot ! out processors
     
-    ! counts total number of points in each plot
-    !plot_nnode(i_plot) = 0
-    !plot_nelmt(i_plot) = 0
-    
-    !call cvd_count_totals_ext_mesh(plot_nproc(i_plot), &
-    !plot_proc_list(i_plot,1:plot_nproc(i_plot)),proc_width, &
-    !inp_path,nnode,nelmt,out_res)
-    !write(*,'(a)')'complete!'
-    !write(*,*)'  Total number of nodes: ',nnode
-    !write(*,*)'  Total number of elements: ',nelmt
-    
-    !plot_nnode(i_plot)=nnode
-    !plot_nelmt(i_plot)=nelmt
-    
     ! Compute bytes and offsets
     bytes(1) = (ndim*plot_nnode(i_plot))*size_float ! Coordinates
     bytes(2) = (NENOD_OUT*plot_nelmt(i_plot))*size_int ! Connectivity
@@ -188,7 +174,6 @@ do i_t=1,t_nstep
     write(tmp_str,*)i_plot
     file_head=trim(out_head)//'_server'//trim(adjustl(tmp_str))      
     write(out_fname,fmt=format_str1)trim(file_head)//'_',tstep,trim(out_ext)
-    !write(*,*)tstep,trim(out_fname)
     ! write vtu file to pvtu file      
     buffer='<Piece Source="'//trim(out_fname)//'"/>'
     write(pvtu_unit,'(a)')trim(buffer)        
@@ -310,8 +295,6 @@ do i_t=1,t_nstep
           stop
         endif
         
-        !write(*,*)'  points:',node_count,nnode
-        
         ! stores total number of points written
         tmp_nnode = tmp_nnode + nnode
 
@@ -339,15 +322,11 @@ do i_t=1,t_nstep
         endif
         deallocate(ibool)
         
-        !write(*,*)'  elements:',elmt_count,nelmt
-        !write(*,*)'  points : ',node_count,nnode
-        !write(*,*)tmp_nnode,node_count
         if (tmp_nnode/=node_count)then
           write(*,'(/,a)')'ERROR: inconsistent number of nodes!'
           stop
         endif
         
-        !write(*,*)node_count
         !node_count = node_count + nnode          
         elmt_count = elmt_count + nelmt          
         
@@ -358,20 +337,16 @@ do i_t=1,t_nstep
       call close_file(fd_z)
       call close_file(fd_con)
         
-      !write(*,*)node_count,plot_nnode(i_plot)
       if (node_count /=  plot_nnode(i_plot)) stop 'Error: Number of total points are not consistent'
       ! checks with total number of elements
       if (elmt_count /= plot_nelmt(i_plot)) then 
-        !write(*,'(/,a)')'ERROR: number of elements counted:',elmt_count,'total:',plot_nelmt(i_plot)
         write(*,*)'Number of total elements are not consistent!'
         stop
       endif
     endif
     
-    !write(*,*)trim(vtu_file)
     ! write coordinates to vtu file          
     call open_file2append(trim(vtu_file)//char(0),fd) 
-    !write(*,*)'hi'
     call write_integer(bytes(1),fd) 
     write(tmp_str,*)i_plot
     call open_file2read('./tmp/tmp_x_plot'//trim(adjustl(tmp_str))//char(0),fd_x)
@@ -393,7 +368,6 @@ do i_t=1,t_nstep
       do j=1,NENOD_OUT
         call read_integer(tmp_int,fd_con)
         call write_integer(tmp_int-1,fd)
-        !write(*,*)tmp_int-1
       enddo
     enddo
     call close_file(fd_con)    
@@ -518,8 +492,6 @@ do i_t=1,t_nstep
         endif ! if dat_topo == 0
         deallocate(ibool)        
       
-        !write(*,*)'  points:',node_count,nnode
-      
         ! stores total number of points written
         node_count = node_count + nnode
       
@@ -604,7 +576,6 @@ do i_t=1,t_nstep
             read(222) dat
             close(222)
             tmp_dat=tmp_dat+real(dat)
-            !write(*,*)inp_fname
           enddo
           if (inp_ncomp==3 .and. out_ncomp==1)then
             tmp_dat=0.5*tmp_dat ! Equivalent to S-wave potential
@@ -643,7 +614,6 @@ do i_t=1,t_nstep
               
             read(11) dat_glob
             tmp_dat_glob=tmp_dat_glob+real(dat_glob)
-            !write(*,*)inp_fname
           enddo
           if (inp_ncomp==3 .and. out_ncomp==1)then
             tmp_dat_glob=0.5*tmp_dat_glob ! Equivalent to S-wave potential
