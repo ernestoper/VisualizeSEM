@@ -1,27 +1,3 @@
-!=====================================================================
-!
-!               S p e c f e m 3 D  V e r s i o n  1 . 4
-!               ---------------------------------------
-!
-!                 Dimitri Komatitsch and Jeroen Tromp
-!    Seismological Laboratory - California Institute of Technology
-!         (c) California Institute of Technology September 2006
-!
-! This program is free software; you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation; either version 2 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License along
-! with this program; if not, write to the Free Software Foundation, Inc.,
-! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-!
-!=====================================================================
 ! Revision: April 06,2010 HNG
 subroutine write_ensight ()
   
@@ -77,9 +53,9 @@ enddo
 write(*,*)
 write(*,'(a)')'complete'
 end subroutine write_ensight
-!=====================================================================
+!==============================================================================
 
-subroutine write_ensight_serial (i_plot,pnproc,proc_list)  
+subroutine write_ensight_serial(i_plot,pnproc,proc_list)  
 
 use visualize_par
 implicit none
@@ -164,19 +140,12 @@ do i=1,t_nstep
   write(11,'(e12.5)',advance='yes')(t_start+(i-1)*t_inc)*DT
 enddo
 close(11)
-!write(*,'(a)')'complete!'
-
-!write(*,'(a)',advance='no')'writing Ensight mesh file...'
-  
-!write(*,*) 'Slice list: '
-!write(*,*) proc_list(1:nproc)
 
 ! open Ensight Gold geo file to store mesh data
 geo_file = trim(out_path) // '/' // trim(file_head)//'.geo' !; write(*,*)geo_file
 call open_file2write(trim(geo_file)//char(0),fd)    
    
 npart=1        
-!write(*,*)nnode,nelmt
 buffer='C Binary'
 call write_string(buffer//char(0),fd)
 buffer='Created by write_ensight Routine'
@@ -221,9 +190,6 @@ do i_proc = 1, pnproc
 
   iproc = proc_list(i_proc)
 
-  !write(*,*) ' '
-  !write(*,*) 'Reading plot ', iproc
-
   ! gets number of elements and global points for this partition
   write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,'_external_mesh.bin'    
   open(unit=27,file=trim(mesh_file),status='old',action='read',form='unformatted',iostat=ios)
@@ -262,8 +228,6 @@ do i_proc = 1, pnproc
     stop
   endif
     
-  !write(*,*)'  points:',node_count,nnode
-    
   ! stores total number of points written
   node_count = node_count + nnode
 
@@ -279,16 +243,12 @@ if (node_count /=  plot_nnode(i_plot))then
   write(*,'(/,a)')'Error: number of total points are not consistent!'
   stop
 endif
-!write(*,*) 'Total number of points: ', node_count
-!write(*,*) ' '
 
 !write coordinates to file
 !call open_file2read('tmp_x'//char(0),fd_x)
 call open_file2read('./tmp/tmp_x'//char(0),fd_x)
 do i=1,plot_nnode(i_plot)
   call read_float(tmp_real,fd_x)
-  !write(*,*)'new:',tmp_real
-  !stop
   call write_float(tmp_real,fd)   
 enddo
 
@@ -352,9 +312,6 @@ do i_proc = 1, pnproc
     stop
   endif
   
-  !write(*,*)'  elements:',elmt_count,nelmt
-  !write(*,*)'  points : ',node_count,nnode
-  
   elmt_count = elmt_count + nelmt
 
   deallocate(ibool)
@@ -366,17 +323,9 @@ call close_file(fd)
 
 ! checks with total number of elements
 if (elmt_count /= plot_nelmt(i_plot)) then 
-  !write(*,'(/,a)')'ERROR: number of elements counted:',elmt_count,'total:',plot_nelmt(i_plot)
   write(*,'(/,a)')'ERROR: number of total elements are not consistent!'
   stop
 endif
-!write(*,*) 'Total number of elements: ', elmt_count
-
-!write(*,'(a)')'complete!'  
-
-!write(*,*) 'Done writing '//trim(geo_file)
-
-! Write data files
 
 ! Format for progress display
 write(tmp_str,*)ceiling(log10(real(nplot)+1))
@@ -411,10 +360,6 @@ do i_t=1,t_nstep
   buffer='coordinates'
 
   call write_string(buffer//char(0),fd)
-
-  !Open temporary files to store data
-  !call open_file2write('tmp_val'//char(0),fd_x)
-  
 
   if (out_ncomp>1) then
     do i_comp=1,out_ncomp
@@ -605,8 +550,6 @@ do i_t=1,t_nstep
         deallocate(ibool,dat_glob,tmp_dat_glob)
       endif ! if dat_topo == 0
   
-      !write(*,*)'  points:',node_count,nnode
-  
       ! stores total number of points written
       node_count = node_count + nnode
       
@@ -617,9 +560,6 @@ do i_t=1,t_nstep
       write(*,'(/,a)')'Error: Number of total points are not consistent'
       stop
     endif
-    !write(*,*) 'Total number of points: ', node_count
-    !write(*,*) ' '
-
     call close_file(fd)
   endif ! if (out_ncomp>1)
 
@@ -628,8 +568,6 @@ do i_t=1,t_nstep
   
 enddo ! do i_t=1,t_nstep
 
-!write(*,'(a)')' complete!'
-
 end subroutine write_ensight_serial
-!=============================================================
+!==============================================================================
  
