@@ -1,5 +1,3 @@
-program visualize
-
 ! This programs writes Ensight Gold binary file collecting binary mesh and volume data
 ! files produced by SPECFEM3D. The Ensight Gold file can then be visualized in 
 ! VTK/ParaView. See http://www.vtk.org and http://www.paraview.org for details.
@@ -17,23 +15,23 @@ program visualize
 !   Hom Nath Gharti, NORSAR
 !   Mar 10,2010 (NORSAR)
 ! FEEDBACK:
-!   homnath_AT_norsar_DOT_no
+!   hgharti_AT_princeton_DOT_edu
 !------------------------------------------  
   
+program visualize
 use visualize_par
 implicit none
 
 integer :: i_plot
 character(len=80) :: inp_fname  
   
-!write(*,*)iargc()
 if (iargc() <= 0) then
   write(*,'(/,a)')'ERROR: no input file!'
   stop! counts total number of nodes and elementsp
 endif
   
 write(*,'(a)',advance='no')'reading main input file...'
-call getarg(1,inp_fname)
+call get_command_argument(1, inp_fname)
    
 call read_input(inp_fname)
 write(*,'(a)')'complete!'

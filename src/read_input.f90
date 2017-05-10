@@ -86,16 +86,13 @@ do
   ! read output information
   if (trim(token)=='output:')then
     call split_string(tag,',',args,narg)
-    !out_path=get_string('path',args,narg)     
     call seek_string('path',strval,args,narg)
     if (.not. isblank(strval))out_path=trim(strval)
     out_ncomp=get_integer('ncomp',args,narg)
-    !stop
     out_head=get_string('head',args,narg)
     out_vname=get_string('vname',args,narg)       
     out_res=get_integer('res',args,narg)
     out_format=get_integer('form',args,narg)
-    !print*,narg,arg
     output_stat=0      
     cycle      
   endif
@@ -106,7 +103,6 @@ do
     nproc=get_integer('nproc',args,narg)
     proc_head=get_string('head',args,narg)
     proc_width=get_integer('width',args,narg)            
-    !nplot=get_integer('nplot',args,narg)
     nplot=nproc ! default
     call seek_integer('nplot',ival,args,narg,istat)
     if(istat==0 .and. ival>0)nplot=ival
