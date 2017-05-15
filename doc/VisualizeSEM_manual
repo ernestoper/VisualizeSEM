@@ -2,7 +2,7 @@ BACKGROUND
 =================
 This program collects 3D binary mesh and volume data files produced by SPECFEM3D
 and writes VTK unstructured binary files or Ensight Gold binary files optionally.
-The VTK or the Ensight Gold files can then be visualized in VTK/ParaView. 
+The VTK or the Ensight Gold files can be visualized in VTK/ParaView. 
 See http://www.vtk.org, http://www.paraview.org, and http://www.ensight.com/ for details.
 VTK binary files are endianness dependent, i.e., the files written in Little Endian architecture 
 cannot be visualized in Big Endian architecture and vice versa. On the other hand, the Ensight

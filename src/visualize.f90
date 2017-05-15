@@ -1,15 +1,16 @@
-! This programs writes Ensight Gold binary file collecting binary mesh and volume data
-! files produced by SPECFEM3D. The Ensight Gold file can then be visualized in 
-! VTK/ParaView. See http://www.vtk.org and http://www.paraview.org for details.
-!------------------------------------------
+! This is the main driver program. The program  writes ParaView VTK and Ensight
+! Gold binary file collecting binary mesh and volume data files produced by
+! SPECFEM3D. These files can then be visualized in VTK/ParaView.
+! See http://www.vtk.org and http://www.paraview.org for details.
+!------------------------------------------------------------------------------
 ! DEPENDENCY:
-!   cfunc4fortran.c, visualize_par.f90, visualize_collect.f90, write_ensight.f90,
-!   write_vtu.f90 
+!   cfunc4fortran.c, visualize_par.f90, visualize_collect.f90,
+!   write_ensight.f90,write_vtu.f90 
 ! COMPILE
 !   >> make
 ! USAGE
-!   ./xvisualize [input filename]
-!   e.g., ./xvisualize visualize.in
+!   ./visualize input_file_name
+!   e.g., ./visualize visualize.in
 !   see visualize.in for input detail
 ! HISTORY:
 !   Hom Nath Gharti, NORSAR
@@ -49,7 +50,8 @@ else
 endif  
 
 if (out_ncomp > inp_ncomp)then
-  write(*,'(/,a)')'ERROR: number of components for output cannot be greater than for input!'
+  write(*,'(/,a)')'ERROR: number of components for output cannot be greater &
+  &than for input!'
   stop
 elseif (out_ncomp>1 .and. out_ncomp /= inp_ncomp)then
   write(*,'(/,a)')'ERROR: not supported components transformation!'
