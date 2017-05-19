@@ -11,6 +11,6 @@ procinfo: nproc=16, head='proc', width=6, npmax=1
 # processor list for each plot
 proclist: mode=0
 
-# server ans executabel list needed only for Ensight Gold format for each plot or only one if all processors are the same
+# server and executable list needed only for Ensight Gold format for each plot or only one if all processors are the same
 server: name='fasan.norsar.no', exec='/space/homnath/soft/paraview-3.7/bin/paraview'
 
