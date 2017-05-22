@@ -1,12 +1,14 @@
 BACKGROUND
 =================
-This program collects 3D binary mesh and volume data files produced by SPECFEM3D
-and writes VTK unstructured binary files or Ensight Gold binary files optionally.
-The VTK or the Ensight Gold files can be visualized in VTK/ParaView. 
-See http://www.vtk.org, http://www.paraview.org, and http://www.ensight.com/ for details.
-VTK binary files are endianness dependent, i.e., the files written in Little Endian architecture 
-cannot be visualized in Big Endian architecture and vice versa. On the other hand, the Ensight
-Gold files are endianness independent, actual endianness can be set during the visualization within the paraView. 
+This program collects 3D binary mesh and volume data files produced by
+SPECFEM3D and writes VTK unstructured binary files or Ensight Gold binary files
+optionally. The VTK or the Ensight Gold files can be visualized in
+VTK/ParaView. See http://www.vtk.org, http://www.paraview.org, and 
+http://www.ensight.com/ for details. VTK binary files are endianness 
+dependent, i.e., the files written in Little Endian architecture cannot be
+visualized in Big Endian architecture and vice versa. On the other hand, the
+Ensight Gold files are endianness independent, actual endianness can be set
+during the visualization within the paraView. 
 
 DEVELOPER
 =================
@@ -36,33 +38,42 @@ April 07,2010, HNG
   - updated manual
 April 06,2010, HNG
   - clean up codes
-  - added support to medium resolution, parallel visualizaion, and data from global poins for VTK format
+  - added support to medium resolution, parallel visualizaion, and data from
+    global poins for VTK format
 March 25,2010, HNG
   - added support for parallel visualization in Ensight format
 March 23,2010, HNG
   - updated visualize_manual
   - added support to 20 noded hexahedra elements only in Ensight format 
-  - added support to read binary files stored in global nodes only in Ensight format 
-  - changed nodal operations into do loops in visualize_collect.f90 for cleaner code 
+  - added support to read binary files stored in global nodes only in Ensight
+    format 
+  - changed nodal operations into do loops in visualize_collect.f90 for
+    cleaner code 
 March 11,2010, HNG
   - added support to display vector and symmeric tensor data in Ensight Gold
-  - added support to display vector to scalar data. This is necessary if we want to visualize the equivalent
-    scalar potential corresponding to the vector. The equivalent potential is determined by the 0.5*sum_of_vector_components
+  - added support to display vector to scalar data. This is necessary if we
+    want to visualize the equivalent
+    scalar potential corresponding to the vector. The equivalent potential is
+    determined by the 0.5*sum_of_vector_components
 March 09,2010, HNG
   - integration to SPECFEM3D_SESAME
 
 PACKAGE STRUCTURE
 =================
 visualizeSEM/
-  bin/                  : where all object files and executable will be stored during compilation
+  bin/                  : where all object files and executable will be stored
+                          during compilation
   input/                : contains input files
-  output/               : default output folder. output will be stored in this folder unless output path is defined in the input
+  output/               : default output folder. output will be stored in this
+                          folder unless output path is defined in the input
   src/                  : contains all source files
     Makefile              : file required to compile the package
     visualize_par.f90     : constants and global parameters
-    cfunc4fortran.c       : collection of C routines to be called from FORTRAN programs
+    cfunc4fortran.c       : collection of C routines to be called from FORTRAN
+                            programs
     string_process.f90    : contains routines to process strings
-    read_input.f90        : this routine read the structured input as described below
+    read_input.f90        : this routine read the structured input as 
+                            described below
     visualize.f90         : main driver program
     visualize_collect.f90 : collection of routines to be used to collect data from processor/s
     write_ensight.f90     : routine that writes serial/parallel Ensight gold files

@@ -487,7 +487,6 @@ do i_t=1,t_nstep
           read(222) dat
           close(222)
           tmp_dat=tmp_dat+real(dat)
-          !write(*,*)inp_fname
         enddo
         if (inp_ncomp==3 .and. out_ncomp==1)then
           tmp_dat=0.5*tmp_dat ! Equivalent to S-wave potential
@@ -526,7 +525,6 @@ do i_t=1,t_nstep
             
           read(11) dat_glob
           tmp_dat_glob=tmp_dat_glob+real(dat_glob)
-          !write(*,*)inp_fname
         enddo
         if (inp_ncomp==3 .and. out_ncomp==1)then
           tmp_dat_glob=0.5*tmp_dat_glob ! Equivalent to S-wave potential
