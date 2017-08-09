@@ -10,7 +10,8 @@ character(len=80) :: file_head
   
 ! Write a Ensight Gold SOS file
 if (nplot>1)then  
-  open(unit=101, file=trim(out_path)// '/' // trim(out_head)//'.sos', status='replace', action='write', iostat=ios)
+  open(unit=101, file=trim(out_path)// '/' // trim(out_head)//'.sos',         &
+  status='replace', action='write', iostat=ios)
     
   write(101,'(a)')'FORMAT'
   write(101,'(a,/)')'type:  master_server gold'
@@ -48,7 +49,8 @@ do i_plot=1,nplot
   !write(*,*)'  Total number of elements: ',nelmt
 
   ! Ensight Gold files
-  call write_ensight_serial(i_plot,plot_nproc(i_plot),plot_proc_list(i_plot,1:plot_nproc(i_plot)))    
+  call write_ensight_serial(i_plot,plot_nproc(i_plot), &
+  plot_proc_list(i_plot,1:plot_nproc(i_plot)))    
 enddo 
 write(*,*)
 write(*,'(a)')'complete'
@@ -65,7 +67,6 @@ integer,intent(in) :: pnproc
 integer,dimension(pnproc),intent(in) :: proc_list
   
 character(len=20), parameter :: wild_char='********************'
-!integer,dimension(6),parameter :: file_unit = (/ 111, 222, 333, 444, 555, 666 /)
   
 integer :: i,i_t,i_proc,iproc
 integer :: ios
@@ -76,8 +77,10 @@ integer :: node_count,elmt_count
 integer :: i_comp
 
 ! data must be of dimension: (NGLLX,NGLLY,NGLLZ,NSPEC_AB)
-real(kind=CUSTOM_REAL),dimension(:,:,:,:),allocatable :: dat ! Data points in local nodes
-real(kind=CUSTOM_REAL),dimension(:),allocatable :: dat_glob ! data points in global points
+real(kind=CUSTOM_REAL),dimension(:,:,:,:),allocatable :: dat
+! Data points in local nodes
+real(kind=CUSTOM_REAL),dimension(:),allocatable :: dat_glob
+! data points in global points
 real(kind=4),dimension(:,:,:,:),allocatable :: tmp_dat
 real(kind=4),dimension(:),allocatable :: tmp_dat_glob
 character(len=80) :: file_head
@@ -104,9 +107,11 @@ file_head=trim(out_head)//'_server'//trim(adjustl(tmp_str))
 ts=1 ! Time set
 
 !write(*,'(a)',advance='no')'writing Ensight case file...'
-open(unit=11, file=trim(out_path)// '/' // trim(file_head)//'.case', status='replace', action='write', iostat=ios)
+open(unit=11, file=trim(out_path)// '/' // trim(file_head)//'.case',&
+status='replace', action='write', iostat=ios)
 if (ios /= 0)then
-  write(*,'(/,a)')'ERROR: output file "'//trim(file_head)//'.case'//'" cannot be opened!'
+  write(*,'(/,a)')'ERROR: output file "'//trim(file_head)//'.case'//&
+  '" cannot be opened!'
   stop
 endif  
 
@@ -118,14 +123,17 @@ write(11,'(a,a,/)')'model:    ',trim(file_head)//'.geo'
 
 write(11,'(a)')'VARIABLE'
 if (out_ncomp == 1)then
-  write(11,'(a,i10,a,a,a,a,/)')'scalar per node: ',ts,' ',trim(out_vname),' ',trim(file_head)//'_'//wild_char(1:t_width)//'.scl'
+  write(11,'(a,i10,a,a,a,a,/)')'scalar per node: ',ts,' ',trim(out_vname),' ',&
+  trim(file_head)//'_'//wild_char(1:t_width)//'.scl'
 elseif (out_ncomp == 3)then
-  write(11,'(a,i10,a,a,a,a,/)')'vector per node: ',ts,' ',trim(out_vname),' ',trim(file_head)//'_'//wild_char(1:t_width)//'.vec'
+  write(11,'(a,i10,a,a,a,a,/)')'vector per node: ',ts,' ',trim(out_vname),' ',&
+  trim(file_head)//'_'//wild_char(1:t_width)//'.vec'
 elseif (out_ncomp == 6)then
-  write(11,'(a,i10,a,a,a,a,/)')'tensor symm per node: ',ts,' ',trim(out_vname),' ', &
-  trim(file_head)//wild_char(1:t_width)//'.tns'
+  write(11,'(a,i10,a,a,a,a,/)')'tensor symm per node: ',ts,' ',&
+  trim(out_vname),' ',trim(file_head)//wild_char(1:t_width)//'.tns'
 else
-  write(*,'(/,a,i5,a)')'ERROR: number of components ',out_ncomp,' not supported!'
+  write(*,'(/,a,i5,a)')'ERROR: number of components ',out_ncomp,&
+  ' not supported!'
   stop
 endif
 
@@ -142,7 +150,7 @@ enddo
 close(11)
 
 ! open Ensight Gold geo file to store mesh data
-geo_file = trim(out_path) // '/' // trim(file_head)//'.geo' !; write(*,*)geo_file
+geo_file = trim(out_path) // '/' // trim(file_head)//'.geo'
 call open_file2write(trim(geo_file)//char(0),fd)    
    
 npart=1        
@@ -185,14 +193,17 @@ write(proc_width_str,*)trim(adjustl(tmp_str))//'.'//trim(adjustl(tmp_str))
 format_str1='(a,i'//trim(adjustl(proc_width_str))//',a)'
 write(tmp_str,*)t_width
 write(t_width_str,*)trim(adjustl(tmp_str))//'.'//trim(adjustl(tmp_str))  
-format_str2='(a,i'//trim(adjustl(proc_width_str))//',a,i'//trim(adjustl(t_width_str))//',a)'
+format_str2='(a,i'//trim(adjustl(proc_width_str))//',a,i'//&
+trim(adjustl(t_width_str))//',a)'
 do i_proc = 1, pnproc
 
   iproc = proc_list(i_proc)
 
   ! gets number of elements and global points for this partition
-  write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,'_external_mesh.bin'    
-  open(unit=27,file=trim(mesh_file),status='old',action='read',form='unformatted',iostat=ios)
+  write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,             &
+  '_external_mesh.bin'    
+  open(unit=27,file=trim(mesh_file),status='old',action='read',               &
+  form='unformatted',iostat=ios)
   if (ios /= 0) then
     write(*,'(/,a)')'ERROR: file '//trim(mesh_file)//' cannot be opened!'
     stop
@@ -221,8 +232,8 @@ do i_proc = 1, pnproc
     nnode,fd_x,fd_y,fd_z)
   elseif (out_res==2)then  
     ! high resolution, all GLL points
-    call cvd_write_GLL_points_only(NSPEC_AB,NGLOB_AB,ibool,xstore,ystore,zstore,&
-    nnode,fd_x,fd_y,fd_z)
+    call cvd_write_GLL_points_only(NSPEC_AB,NGLOB_AB,ibool,xstore,ystore,     &
+    zstore,nnode,fd_x,fd_y,fd_z)
   else
     write(*,'(/,a)')'ERROR: wrong out_res value!'
     stop
@@ -281,8 +292,10 @@ do i_proc = 1, pnproc
   iproc = proc_list(i_proc)
 
   ! gets number of elements and global points for this partition
-  write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,'_external_mesh.bin'    
-  open(unit=27,file=trim(mesh_file),status='old',action='read',form='unformatted',iostat=ios)
+  write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,&
+  '_external_mesh.bin'    
+  open(unit=27,file=trim(mesh_file),status='old',action='read',&
+  form='unformatted',iostat=ios)
   if (ios /= 0) then
     write(*,'(/,a)')'ERROR: file '//trim(mesh_file)//' cannot be opened!'
     stop
@@ -331,7 +344,8 @@ endif
 write(tmp_str,*)ceiling(log10(real(nplot)+1))
 format_str3='(a,a,i'//trim(adjustl(tmp_str))//',a,i'//trim(adjustl(tmp_str))
 write(tmp_str,*)ceiling(log10(real(t_nstep)+1))
-format_str3=trim(format_str3)//',a,i'//trim(adjustl(tmp_str))//',a,i'//trim(adjustl(tmp_str))//')'
+format_str3=trim(format_str3)//',a,i'//trim(adjustl(tmp_str))//',a,i'//&
+trim(adjustl(tmp_str))//')'
 
 if (out_ncomp==1) then
   out_ext='.scl'
@@ -340,7 +354,8 @@ elseif (out_ncomp==3) then
 elseif (out_ncomp==6) then
   out_ext='.tns'
 else
-  write(*,'(/,a,i5,a)')'ERROR: number of components ',out_ncomp,' not supported!'
+  write(*,'(/,a,i5,a)')'ERROR: number of components ',out_ncomp,              &
+  ' not supported!'
   stop
 endif 
 
@@ -349,7 +364,8 @@ do i_t=1,t_nstep
   tstep=t_start + (i_t-1)*t_inc
 
   ! Open Ensight Gold data file to store data
-  write(out_fname,fmt=format_str1)trim(out_path) // '/'//trim(file_head)//'_',tstep,trim(out_ext)  
+  write(out_fname,fmt=format_str1)trim(out_path) // '/'//trim(file_head)//'_',&
+  tstep,trim(out_ext)  
   npart=1;
   call open_file2write(trim(out_fname)//char(0),fd)
   buffer='Scalar data'
@@ -368,8 +384,10 @@ do i_t=1,t_nstep
 
         iproc = proc_list(i_proc)
 
-        write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,'_external_mesh.bin'           
-        open(unit=27,file=trim(mesh_file),status='old',action='read',form='unformatted')
+        write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,       &
+        '_external_mesh.bin'           
+        open(unit=27,file=trim(mesh_file),status='old',action='read',         &
+        form='unformatted')
         read(27) NSPEC_AB
         read(27) NGLOB_AB
   
@@ -381,8 +399,8 @@ do i_t=1,t_nstep
           allocate(dat(NGLLX,NGLLY,NGLLZ,NSPEC_AB)) 
 
           ! data file  
-          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//trim(proc_head), &
-          iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
+          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//&
+          trim(proc_head),iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
           open(unit = 11,file = trim(inp_fname),status='old',&
             action='read', iostat = ios,form ='unformatted')
           if (ios /= 0) then
@@ -412,8 +430,8 @@ do i_t=1,t_nstep
           allocate(dat_glob(NGLOB_AB)) 
 
           ! data file  
-          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//trim(proc_head), &
-          iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
+          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//&
+          trim(proc_head),iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
           open(unit = 11,file = trim(inp_fname),status='old',&
             action='read', iostat = ios,form ='unformatted')
           if (ios /= 0) then
@@ -425,14 +443,14 @@ do i_t=1,t_nstep
       
           ! writes point coordinates and scalar value to mesh file
           if (out_res==0) then 
-            call cvd_write_corners_data_glob(NSPEC_AB,NGLOB_AB,ibool,real(dat_glob), &
-            nnode,fd)  
+            call cvd_write_corners_data_glob(NSPEC_AB,NGLOB_AB,ibool,         &
+            real(dat_glob),nnode,fd)  
           elseif (out_res==1) then 
-            call cvd_write_hexa20_data_glob(NSPEC_AB,NGLOB_AB,ibool,real(dat_glob), &
-            nnode,fd)
+            call cvd_write_hexa20_data_glob(NSPEC_AB,NGLOB_AB,ibool,          &
+            real(dat_glob),nnode,fd)
           elseif (out_res==2) then  
-            call cvd_write_GLL_points_data_glob(NSPEC_AB,NGLOB_AB,ibool,real(dat_glob), &
-            nnode,fd)
+            call cvd_write_GLL_points_data_glob(NSPEC_AB,NGLOB_AB,ibool,      &
+            real(dat_glob),nnode,fd)
           else
             write(*,'(/,a)')'ERROR: wrong out_res value!'
             stop
@@ -459,8 +477,10 @@ do i_t=1,t_nstep
 
       iproc = proc_list(i_proc)
 
-      write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,'_external_mesh.bin'           
-      open(unit=27,file=trim(mesh_file),status='old',action='read',form='unformatted')
+      write(mesh_file,fmt=format_str1) trim(inp_path)//'/proc',iproc,         &
+      '_external_mesh.bin'           
+      open(unit=27,file=trim(mesh_file),status='old',action='read',           &
+      form='unformatted')
       read(27) NSPEC_AB
       read(27) NGLOB_AB
   
@@ -475,8 +495,8 @@ do i_t=1,t_nstep
         tmp_dat=0.0
         do i_comp=1,inp_ncomp 
           ! data file  
-          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//trim(proc_head), &
-            iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
+          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//&
+          trim(proc_head),iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
           open(unit = 222,file = trim(inp_fname),status='old',&
             action='read', iostat = ios,form ='unformatted')
           if (ios /= 0) then
@@ -514,8 +534,8 @@ do i_t=1,t_nstep
         tmp_dat=0.0
         do i_comp=1,inp_ncomp 
           ! data file  
-          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//trim(proc_head), &
-            iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
+          write(inp_fname,fmt=format_str2)trim(out_path)//'/'//&
+          trim(proc_head),iproc,trim(inp_head(i_comp)),tstep,trim(inp_ext)
           open(unit = 11,file = trim(inp_fname),status='old',&
             action='read', iostat = ios,form ='unformatted')
           if (ios /= 0) then
@@ -532,14 +552,14 @@ do i_t=1,t_nstep
       
         ! writes point coordinates and scalar value to mesh file
         if (out_res==0) then 
-          call cvd_write_corners_data_glob(NSPEC_AB,NGLOB_AB,ibool,tmp_dat_glob, &
-          nnode,fd)  
+          call cvd_write_corners_data_glob(NSPEC_AB,NGLOB_AB,ibool,           &
+          tmp_dat_glob,nnode,fd)  
         elseif (out_res==1) then 
-          call cvd_write_hexa20_data_glob(NSPEC_AB,NGLOB_AB,ibool,tmp_dat_glob, &
-          nnode,fd)
+          call cvd_write_hexa20_data_glob(NSPEC_AB,NGLOB_AB,ibool,            &
+          tmp_dat_glob,nnode,fd)
         elseif (out_res==2) then
-          call cvd_write_GLL_points_data_glob(NSPEC_AB,NGLOB_AB,ibool,tmp_dat_glob, &
-          nnode,fd)
+          call cvd_write_GLL_points_data_glob(NSPEC_AB,NGLOB_AB,ibool,        &
+          tmp_dat_glob,nnode,fd)
         else
           write(*,'(/,a)')'ERROR: wrong out_res value!'
           stop
@@ -562,7 +582,8 @@ do i_t=1,t_nstep
   endif ! if (out_ncomp>1)
 
   ! Display progress
-  write(*,fmt=format_str3,advance='no')CR,' plot: ',i_plot,'/',nplot,', time step: ',i_t,'/',t_nstep
+  write(*,fmt=format_str3,advance='no')CR,' plot: ',i_plot,'/',nplot,&
+  ', time step: ',i_t,'/',t_nstep
   
 enddo ! do i_t=1,t_nstep
 

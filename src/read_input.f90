@@ -39,7 +39,8 @@ if (ios /= 0)then
 endif
 
 do
-  read(11,'(a)',iostat=ios)line ! This will read a line and proceed to next line
+  read(11,'(a)',iostat=ios)line
+  ! This will read a line and proceed to next line
   if (ios/=0)exit
   
   ! check for blank and comment line
@@ -49,10 +50,11 @@ do
   tag=trim(line)
   call last_char(line,tmp_char,ind)
   if (tmp_char=='&')then
-        slen=len(line)
-        tag=trim(line(1:ind-1))
-        read(11,'(a)',iostat=ios)line ! This will read a line and proceed to next line
-        tag=trim(tag)//trim(line)         
+    slen=len(line)
+    tag=trim(line(1:ind-1))
+    read(11,'(a)',iostat=ios)line
+    ! This will read a line and proceed to next line
+    tag=trim(tag)//trim(line)         
   endif
   
   call first_token(tag,token)
@@ -78,7 +80,6 @@ do
     endif
     inp_ext=get_string('ext',args,narg); inp_ext='.'//trim(inp_ext)
     dat_topo=get_integer('topo',args,narg)
-    !print*,narg,arg
     input_stat=0      
     cycle      
   endif
@@ -111,14 +112,14 @@ do
       write(*,'(/,a)')'"nplot" is reset to "nproc"!'
     endif
     plot_npmax=get_integer('npmax',args,narg)
-      allocate(plot_nproc(nplot))
-      plot_nproc=0
-      allocate(plot_proc_list(nplot,plot_npmax)) 
-      if (out_format==1 .and. nplot>1)then
-        ! allocate memory for server_name and server_exec
-        allocate(server_name(nplot))
-        allocate(server_exec(nplot))
-      endif    
+    allocate(plot_nproc(nplot))
+    plot_nproc=0
+    allocate(plot_proc_list(nplot,plot_npmax)) 
+    if (out_format==1 .and. nplot>1)then
+      ! allocate memory for server_name and server_exec
+      allocate(server_name(nplot))
+      allocate(server_exec(nplot))
+    endif    
     procinfo_stat=0      
     cycle      
   endif
@@ -133,7 +134,8 @@ do
       stop
     endif
     if (iplot1>1 .and. ismode0)then
-      write(*,'(/,a)')'ERROR: "proclist:" line with "mode=0" cannot have multiple copies!'
+      write(*,'(/,a)')'ERROR: "proclist:" line with "mode=0" &
+      &cannot have multiple copies!'
       stop
     endif
     proc_mode=get_integer('mode',args,narg)
@@ -161,7 +163,8 @@ do
       do i_proc=proc_ind(1),proc_ind(2),proc_ind(3)
         proc_count=proc_count+1
         if (proc_count>plot_npmax)then
-          write(*,'(/,a)')'ERROR: number of processors per plot exceeds the maximum number!'
+          write(*,'(/,a)')'ERROR: number of processors per plot exceeds the &
+          &maximum number!'
           stop
         endif
         plot_proc_list(iplot1,proc_count)=i_proc
@@ -198,13 +201,15 @@ enddo ! do
 
 ! check for proclist: line number
 if (.not.ismode0 .and. iplot1<nplot)then
-  write(*,'(/,a)')'ERROR: number of lines with "proclist:" are less than the number of output plots ',nplot
+  write(*,'(/,a)')'ERROR: number of lines with "proclist:" are less than the &
+  &number of output plots ',nplot
   stop
 endif
 
 ! check for server: line number
 if (out_format==1 .and. nplot>1 .and. iplot2>1 .and. iplot2<nplot)then
-  write(*,'(/,a)')'ERROR: number of lines with "server:" are less than the number of output plots ',nplot
+  write(*,'(/,a)')'ERROR: number of lines with "server:" are less than the &
+  &number of output plots ',nplot
   stop
 endif
 
@@ -217,32 +222,38 @@ endif
 
 ! check input status
 if (input_stat /= 0)then
-  write(*,'(/,a)')'ERROR: error reading input information! make sure the line with "input:" token is correct.'
+  write(*,'(/,a)')'ERROR: error reading input information! make sure the line &
+  &with "input:" token is correct.'
   stop
 endif
 
 ! check output status
 if (output_stat /= 0)then
-  write(*,'(/,a)')'ERROR: error reading output information! make sure the line with "output:" token is correct.'
+  write(*,'(/,a)')'ERROR: error reading output information! make sure the &
+  &line with "output:" token is correct.'
   stop
 endif
 
 ! check procinfo status
 if (procinfo_stat /= 0)then
-  write(*,'(/,a)')'ERROR: error reading processor information! make sure the line with "procinfo:" token is correct.'
+  write(*,'(/,a)')'ERROR: error reading processor information! make sure the &
+  &line with "procinfo:" token is correct.'
   stop
 endif
 
 ! check proclist status
 if (proclist_stat /= 0)then
-  write(*,'(/,a)')'ERROR: error reading processor list! make sure the line/s with "proclist:" token is/are correct.'
+  write(*,'(/,a)')'ERROR: error reading processor list! make sure the line/s &
+  &with "proclist:" token is/are correct.'
   stop
 endif
 
 ! check server status
 if (out_format==1 .and. nplot>1 .and. server_stat /= 0)then
-  write(*,'(/,a)')'ERROR: error reading server information! make sure the line/s with "server:" token is/are correct.'
+  write(*,'(/,a)')'ERROR: error reading server information! make sure the &
+  &line/s with "server:" token is/are correct.'
   stop
 endif
 
 end subroutine read_input
+!==============================================================================
